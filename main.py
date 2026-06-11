@@ -26,7 +26,6 @@ def comunicado(ack, command):
     unfurl_links=True,
     unfurl_media=True
 )
-    )
 
 handler = SlackRequestHandler(app)
 
