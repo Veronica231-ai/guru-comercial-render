@@ -14,20 +14,23 @@ flask_app = Flask(__name__)
 CANAL_COMUNICADOS = "#comunicações-"
 
 @app.command("/comunicado")
-def comunicado(ack, command):
-
+def comunicado(ack, body, respond):
     ack()
 
-    texto = command["text"]
+    texto = body.get("text", "").strip()
+
+    if not texto:
+        respond("Digite a mensagem depois do comando. Exemplo: /comunicado texto do comunicado")
+        return
+
+    
+        channel=CANAL_COMUNICADOS,
+        text=f"📢 {texto}"
+    )
+
+    respond("Comunicado enviado ✅")
 
 
-
-texto = request.form.get("text", "")
-
-app.client.chat_postMessage(
-    channel=CANAL_COMUNICADOS,
-    text=f"📢 {texto}"
-)
 
 handler = SlackRequestHandler(app)
 
