@@ -23,14 +23,12 @@ def comunicado(ack, body, respond):
         respond("Digite a mensagem depois do comando. Exemplo: /comunicado texto do comunicado")
         return
 
-    
+    app.client.chat_postMessage(
         channel=CANAL_COMUNICADOS,
         text=f"📢 {texto}"
     )
 
     respond("Comunicado enviado ✅")
-
-
 
 handler = SlackRequestHandler(app)
 
