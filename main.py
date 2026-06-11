@@ -22,7 +22,7 @@ def comunicado(ack, command):
 
     app.client.chat_postMessage(
     channel=CANAL_COMUNICADOS,
-    text=texto,
+    text=f"<{texto}>",
     unfurl_links=True,
     unfurl_media=True
 )
