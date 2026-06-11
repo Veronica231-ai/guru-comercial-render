@@ -20,11 +20,12 @@ def comunicado(ack, command):
 
     texto = command["text"]
 
-    app.client.chat_postMessage(
+
+
+app.client.chat_postMessage(
     channel=CANAL_COMUNICADOS,
-    text=f"<{texto}>",
-    unfurl_links=True,
-    unfurl_media=True
+    text=f"📢 {texto}"
+
 )
 
 handler = SlackRequestHandler(app)
