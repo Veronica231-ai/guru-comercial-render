@@ -24,9 +24,11 @@ def comunicado(ack, body, respond):
         return
 
     app.client.chat_postMessage(
-        channel=CANAL_COMUNICADOS,
-        text=f"📢 {texto}"
-    )
+    channel=CANAL_COMUNICADOS,
+    text=f"📢 {texto}",
+    mrkdwn=True,
+    unfurl_links=True
+)
 
     respond("Comunicado enviado ✅")
 
