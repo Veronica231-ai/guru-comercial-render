@@ -12,6 +12,8 @@ app = App(
 flask_app = Flask(__name__)
 
 CANAL_COMUNICADOS = "#comunicações-"
+CANAL_RESPOSTAS = "#nps-repostas"
+
 
 @app.command("/comunicado")
 def comunicado(ack, body, respond):
@@ -24,19 +26,137 @@ def comunicado(ack, body, respond):
         return
 
     app.client.chat_postMessage(
-    channel=CANAL_COMUNICADOS,
-    text=f"📢 {texto}",
-    mrkdwn=True,
-    unfurl_links=True
-)
+        channel=CANAL_COMUNICADOS,
+        text=f"📢 {texto}",
+        mrkdwn=True,
+        unfurl_links=True
+    )
 
     respond("Comunicado enviado ✅")
 
+
+@app.command("/pesquisa")
+def pesquisa(ack, body, respond):
+    ack()
+
+    treinamento = body.get("text", "").strip()
+
+    if not treinamento:
+        respond("Digite o nome do treinamento. Exemplo: /pesquisa HubSpot")
+        return
+
+    app.client.chat_postMessage(
+        channel=CANAL_COMUNICADOS,
+        text=f"Pesquisa de satisfação | {treinamento}",
+        blocks=[
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"💜 *Fala, pessoal! Tudo certinho por aí?*\n\nQueremos te ouvir e entender o que você achou do treinamento de *{treinamento}*.\n\nSua opinião é muito importante para que possamos evoluir cada vez mais nossos conteúdos, treinamentos e iniciativas.\n\nConta pra gente como foi sua experiência! 🚀"
+                }
+            },
+            {
+                "type": "divider"
+            },
+            {
+                "type": "section",
+                "block_id": f"pesquisa_{treinamento}",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "*📊 Como você avalia este treinamento?*"
+                },
+                "accessory": {
+                    "type": "radio_buttons",
+                    "options": [
+                        {
+                            "text": {
+                                "type": "plain_text",
+                                "text": "⭐ Muito Insatisfeito",
+                                "emoji": True
+                            },
+                            "value": "1"
+                        },
+                        {
+                            "text": {
+                                "type": "plain_text",
+                                "text": "⭐⭐ Insatisfeito",
+                                "emoji": True
+                            },
+                            "value": "2"
+                        },
+                        {
+                            "text": {
+                                "type": "plain_text",
+                                "text": "⭐⭐⭐ Neutro",
+                                "emoji": True
+                            },
+                            "value": "3"
+                        },
+                        {
+                            "text": {
+                                "type": "plain_text",
+                                "text": "⭐⭐⭐⭐ Satisfeito",
+                                "emoji": True
+                            },
+                            "value": "4"
+                        },
+                        {
+                            "text": {
+                                "type": "plain_text",
+                                "text": "⭐⭐⭐⭐⭐ Muito Satisfeito",
+                                "emoji": True
+                            },
+                            "value": "5"
+                        }
+                    ],
+                    "action_id": "resposta_pesquisa"
+                }
+            }
+        ]
+    )
+
+    respond("Pesquisa enviada ✅")
+
+
+@app.action("resposta_pesquisa")
+def resposta_pesquisa(ack, body, client):
+    ack()
+
+    usuario = body["user"]["id"]
+    canal_origem = body["channel"]["id"]
+
+    opcao = body["actions"][0]["selected_option"]
+    nota = opcao["value"]
+    texto_nota = opcao["text"]["text"]
+
+    titulo_mensagem = body["message"].get("text", "Pesquisa de satisfação")
+    treinamento = titulo_mensagem.replace("Pesquisa de satisfação | ", "")
+
+    client.chat_postMessage(
+        channel=CANAL_RESPOSTAS,
+        text=(
+            "📊 *Nova resposta de pesquisa*\n\n"
+            f"*Treinamento:* {treinamento}\n"
+            f"*Usuário:* <@{usuario}>\n"
+            f"*Nota:* {nota} - {texto_nota}"
+        )
+    )
+
+    client.chat_postEphemeral(
+        channel=canal_origem,
+        user=usuario,
+        text=f"Resposta registrada ✅\nSua nota foi: {texto_nota}"
+    )
+
+
 handler = SlackRequestHandler(app)
+
 
 @flask_app.route("/slack/events", methods=["POST"])
 def slack_events():
     return handler.handle(request)
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
