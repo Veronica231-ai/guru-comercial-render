@@ -58,7 +58,7 @@ def pesquisa(ack, body, respond):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"*Pesquisa de satisfação* 🔥\n\nQueremos te ouvir e entender o que você achou do treinamento *{treinamento}*.\n\nSua opinião é muito importante para que possamos evoluir cada vez mais nossos conteúdos, treinamentos e iniciativas.\n\nConta pra gente como foi sua experiência!\n\n☕ _Leva menos de 1 minuto... seu café nem vai esfriar_ 😅"
+                "text": f"*Pesquisa de satisfação* 🔥\n\nQueremos te ouvir e entender o que você achou do treinamento *{treinamento}*.\n\nSua opinião é muito importante para que possamos evoluir cada vez mais nossos conteúdos, treinamentos e iniciativas.\n\nConta pra gente como foi sua experiência!\n\n _Leva menos de 1 minuto... seu café nem vai esfriar_ 😅"
             }
         }
     ]
