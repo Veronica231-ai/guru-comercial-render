@@ -13,7 +13,6 @@ flask_app = Flask(__name__)
 
 CANAL_COMUNICADOS = "#comunicações-"
 CANAL_RESPOSTAS = "#nps-repostas"
-LINK_MATERIAL = "https://link-do-material.com"
 
 
 @app.command("/comunicado")
@@ -40,10 +39,18 @@ def comunicado(ack, body, respond):
 def pesquisa(ack, body, respond):
     ack()
 
-    treinamento = body.get("text", "").strip()
+    texto = body.get("text", "").strip()
+
+    if not texto:
+        respond("Digite assim: /pesquisa Nome do treinamento | Link do material")
+        return
+
+    partes = texto.split("|", 1)
+    treinamento = partes[0].strip()
+    link_material = partes[1].strip() if len(partes) > 1 else ""
 
     if not treinamento:
-        respond("Digite assim: /pesquisa Nome do treinamento")
+        respond("Digite o nome do treinamento. Exemplo: /pesquisa HubSpot | https://docs.google.com/...")
         return
 
     blocks = [
@@ -51,12 +58,12 @@ def pesquisa(ack, body, respond):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"*Pesquisa de satisfação* 🔥\n\nQueremos te ouvir e entender o que você achou do treinamento *{treinamento}*.\n\nSua opinião é muito importante para que possamos evoluir cada vez mais nossos conteúdos, treinamentos e iniciativas.\n\nConta pra gente como foi sua experiência!\n\n _Leva menos de 1 minuto... seu café nem vai esfriar_ 😅"
+                "text": f"*Pesquisa de satisfação* 🔥\n\nQueremos te ouvir e entender o que você achou do treinamento *{treinamento}*.\n\nSua opinião é muito importante para que possamos evoluir cada vez mais nossos conteúdos, treinamentos e iniciativas.\n\nConta pra gente como foi sua experiência!\n\n☕ _Leva menos de 1 minuto... seu café nem vai esfriar_ 😅"
             }
         }
     ]
 
-    if LINK_MATERIAL:
+    if link_material:
         blocks.append({
             "type": "actions",
             "elements": [
@@ -67,7 +74,7 @@ def pesquisa(ack, body, respond):
                         "text": "📚 Conferir material do treinamento",
                         "emoji": True
                     },
-                    "url": LINK_MATERIAL
+                    "url": link_material
                 }
             ]
         })
