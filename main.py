@@ -13,6 +13,7 @@ flask_app = Flask(__name__)
 
 CANAL_COMUNICADOS = "#comunicações-"
 CANAL_RESPOSTAS = "#nps-repostas"
+LINK_MATERIAL = "https://link-do-material.com"
 
 
 @app.command("/comunicado")
@@ -42,78 +43,99 @@ def pesquisa(ack, body, respond):
     treinamento = body.get("text", "").strip()
 
     if not treinamento:
-        respond("Digite o nome do treinamento. Exemplo: /pesquisa HubSpot")
+        respond("Digite assim: /pesquisa Nome do treinamento")
         return
+
+    blocks = [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"*Pesquisa de satisfação* 🔥\n\nQueremos te ouvir e entender o que você achou do treinamento *{treinamento}*.\n\nSua opinião é muito importante para que possamos evoluir cada vez mais nossos conteúdos, treinamentos e iniciativas.\n\nConta pra gente como foi sua experiência!\n\n _Leva menos de 1 minuto... seu café nem vai esfriar_ 😅"
+            }
+        }
+    ]
+
+    if LINK_MATERIAL:
+        blocks.append({
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {
+                        "type": "plain_text",
+                        "text": "📚 Conferir material do treinamento",
+                        "emoji": True
+                    },
+                    "url": LINK_MATERIAL
+                }
+            ]
+        })
+
+    blocks.extend([
+        {
+            "type": "divider"
+        },
+        {
+            "type": "section",
+            "block_id": f"pesquisa_{treinamento}",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*📊 Como você avalia este treinamento?*"
+            },
+            "accessory": {
+                "type": "radio_buttons",
+                "options": [
+                    {
+                        "text": {
+                            "type": "plain_text",
+                            "text": "⭐ Muito Insatisfeito",
+                            "emoji": True
+                        },
+                        "value": "1"
+                    },
+                    {
+                        "text": {
+                            "type": "plain_text",
+                            "text": "⭐⭐ Insatisfeito",
+                            "emoji": True
+                        },
+                        "value": "2"
+                    },
+                    {
+                        "text": {
+                            "type": "plain_text",
+                            "text": "⭐⭐⭐ Neutro",
+                            "emoji": True
+                        },
+                        "value": "3"
+                    },
+                    {
+                        "text": {
+                            "type": "plain_text",
+                            "text": "⭐⭐⭐⭐ Satisfeito",
+                            "emoji": True
+                        },
+                        "value": "4"
+                    },
+                    {
+                        "text": {
+                            "type": "plain_text",
+                            "text": "⭐⭐⭐⭐⭐ Muito Satisfeito",
+                            "emoji": True
+                        },
+                        "value": "5"
+                    }
+                ],
+                "action_id": "resposta_pesquisa"
+            }
+        }
+    ])
 
     app.client.chat_postMessage(
         channel=CANAL_COMUNICADOS,
         text=f"Pesquisa de satisfação | {treinamento}",
-        blocks=[
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"💜 *Fala, pessoal! Tudo certinho por aí?*\n\nQueremos te ouvir e entender o que você achou do treinamento de *{treinamento}*.\n\nSua opinião é muito importante para que possamos evoluir cada vez mais nossos conteúdos, treinamentos e iniciativas.\n\nConta pra gente como foi sua experiência! 🚀"
-                }
-            },
-            {
-                "type": "divider"
-            },
-            {
-                "type": "section",
-                "block_id": f"pesquisa_{treinamento}",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "*📊 Como você avalia este treinamento?*"
-                },
-                "accessory": {
-                    "type": "radio_buttons",
-                    "options": [
-                        {
-                            "text": {
-                                "type": "plain_text",
-                                "text": "⭐ Muito Insatisfeito",
-                                "emoji": True
-                            },
-                            "value": "1"
-                        },
-                        {
-                            "text": {
-                                "type": "plain_text",
-                                "text": "⭐⭐ Insatisfeito",
-                                "emoji": True
-                            },
-                            "value": "2"
-                        },
-                        {
-                            "text": {
-                                "type": "plain_text",
-                                "text": "⭐⭐⭐ Neutro",
-                                "emoji": True
-                            },
-                            "value": "3"
-                        },
-                        {
-                            "text": {
-                                "type": "plain_text",
-                                "text": "⭐⭐⭐⭐ Satisfeito",
-                                "emoji": True
-                            },
-                            "value": "4"
-                        },
-                        {
-                            "text": {
-                                "type": "plain_text",
-                                "text": "⭐⭐⭐⭐⭐ Muito Satisfeito",
-                                "emoji": True
-                            },
-                            "value": "5"
-                        }
-                    ],
-                    "action_id": "resposta_pesquisa"
-                }
-            }
-        ]
+        blocks=blocks
     )
 
     respond("Pesquisa enviada ✅")
