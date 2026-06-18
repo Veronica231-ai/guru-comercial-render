@@ -35,10 +35,17 @@ def salvar_no_sheets(tipo, nome, usuario, resposta):
             method="POST"
         )
 
-        urllib.request.urlopen(req, timeout=5)
+        resposta_google = urllib.request.urlopen(req, timeout=5)
+
+        retorno = json.loads(
+            resposta_google.read().decode("utf-8")
+        )
+
+        return retorno.get("status", "erro")
 
     except Exception as erro:
         print("Erro ao salvar no Google Sheets:", erro)
+        return "erro"
 
 
 @app.command("/comunicado")
@@ -156,6 +163,22 @@ def resposta_pesquisa(ack, body, client):
     titulo_mensagem = body["message"].get("text", "Pesquisa de satisfação")
     treinamento = titulo_mensagem.replace("Pesquisa de satisfação | ", "")
 
+    status_salvamento = salvar_no_sheets(
+    tipo="Pesquisa",
+    nome=treinamento,
+    usuario=usuario_nome,
+    resposta=f"{nota} - {texto_nota}"
+)
+
+if status_salvamento == "duplicate":
+    client.chat_postEphemeral(
+        channel=canal_origem,
+        user=usuario_id,
+        text="⚠️ Esta pesquisa já foi respondida por você. Sua resposta anterior já está registrada."
+    )
+    return
+
+if status_salvamento == "saved":
     client.chat_postMessage(
         channel=CANAL_RESPOSTAS,
         text=(
@@ -166,7 +189,26 @@ def resposta_pesquisa(ack, body, client):
         )
     )
 
-    salvar_no_sheets(
+    client.chat_postEphemeral(
+        channel=canal_origem,
+        user=usuario_id,
+        text=f"Resposta registrada ✅\nSua nota foi: {texto_nota}"
+    )
+    return
+
+client.chat_postEphemeral(
+    channel=canal_origem,
+    user=usuario_id,
+    text="⚠️ Não foi possível registrar sua resposta agora. Tente novamente em alguns instantes."
+)
+    )
+    return
+
+client.chat_postEphemeral(
+    channel=canal_origem,
+    user=usuario_id,
+    text="⚠️ Não foi possível registrar sua resposta agora. Tente novamente em alguns instantes."
+)salvar_no_sheets(
         tipo="Pesquisa",
         nome=treinamento,
         usuario=usuario_nome,
