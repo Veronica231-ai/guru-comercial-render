@@ -36,10 +36,7 @@ def salvar_no_sheets(tipo, nome, usuario, resposta):
         )
 
         resposta_google = urllib.request.urlopen(req, timeout=5)
-
-        retorno = json.loads(
-            resposta_google.read().decode("utf-8")
-        )
+        retorno = json.loads(resposta_google.read().decode("utf-8"))
 
         return retorno.get("status", "erro")
 
@@ -202,7 +199,91 @@ def resposta_pesquisa(ack, body, client):
         text="⚠️ Não foi possível registrar sua resposta agora. Tente novamente em alguns instantes."
     )
 
-              {@app.command("/guru-news")
+
+@app.command("/guru-news")
+def guru_news(ack, body, client):
+    ack()
+
+    client.views_open(
+        trigger_id=body["trigger_id"],
+        view={
+            "type": "modal",
+            "callback_id": "guru_news_modal",
+            "title": {
+                "type": "plain_text",
+                "text": "Guru News"
+            },
+            "submit": {
+                "type": "plain_text",
+                "text": "Pré-visualizar"
+            },
+            "close": {
+                "type": "plain_text",
+                "text": "Cancelar"
+            },
+            "blocks": [
+                {
+                    "type": "input",
+                    "block_id": "banner_block",
+                    "label": {
+                        "type": "plain_text",
+                        "text": "🖼️ Link do banner"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "banner_input",
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Cole o link da imagem ou GIF"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "titulo_block",
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📰 Título da edição"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "titulo_input",
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Ex: Guru News | Edição #01"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "periodo_block",
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📅 Período"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "periodo_input",
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Ex: 01 a 15 de Julho"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "destaques_block",
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📢 Destaques da quinzena"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "destaques_input",
+                        "multiline": True
+                    }
+                },
+                {
                     "type": "input",
                     "block_id": "materiais_block",
                     "label": {
@@ -304,7 +385,9 @@ def resposta_pesquisa(ack, body, client):
                 }
             ]
         }
-       )
+    )
+
+
 handler = SlackRequestHandler(app)
 
 
