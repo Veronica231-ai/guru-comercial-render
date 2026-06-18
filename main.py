@@ -21,8 +21,6 @@ GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbysiUIje08OUUmB0Xxt
 
 def salvar_no_sheets(tipo, nome, usuario, resposta):
     try:
-        print("Tentando salvar no Google Sheets...")
-
         dados = json.dumps({
             "tipo": tipo,
             "nome": nome,
@@ -37,30 +35,10 @@ def salvar_no_sheets(tipo, nome, usuario, resposta):
             method="POST"
         )
 
-        resposta_google = urllib.request.urlopen(req, timeout=5)
-
-        print("Resposta do Google Sheets:", resposta_google.status)
-
-    except Exception as erro:
-        print("Erro ao salvar no Google Sheets:", erro)
-
         urllib.request.urlopen(req, timeout=5)
 
     except Exception as erro:
-        print(f"Erro ao salvar no Google Sheets: {erro}")
-    try:
-        requests.post(
-            GOOGLE_SHEETS_URL,
-            json={
-                "tipo": tipo,
-                "nome": nome,
-                "usuario": usuario,
-                "resposta": resposta
-            },
-            timeout=5
-        )
-    except Exception as erro:
-        print(f"Erro ao salvar no Google Sheets: {erro}")
+        print("Erro ao salvar no Google Sheets:", erro)
 
 
 @app.command("/comunicado")
@@ -96,10 +74,6 @@ def pesquisa(ack, body, respond):
     partes = texto.split("|", 1)
     treinamento = partes[0].strip()
     link_material = partes[1].strip() if len(partes) > 1 else ""
-
-    if not treinamento:
-        respond("Digite o nome do treinamento. Exemplo: /pesquisa HubSpot | https://docs.google.com/...")
-        return
 
     blocks = [
         {
@@ -163,7 +137,16 @@ def pesquisa(ack, body, respond):
 def resposta_pesquisa(ack, body, client):
     ack()
 
-    usuario = body["user"]["id"]
+    usuario_id = body["user"]["id"]
+
+    info_usuario = client.users_info(user=usuario_id)
+    usuario_nome = (
+        info_usuario["user"].get("real_name")
+        or info_usuario["user"].get("profile", {}).get("display_name")
+        or info_usuario["user"].get("name")
+        or usuario_id
+    )
+
     canal_origem = body["channel"]["id"]
 
     opcao = body["actions"][0]["selected_option"]
@@ -178,7 +161,7 @@ def resposta_pesquisa(ack, body, client):
         text=(
             "📊 *Nova resposta de pesquisa*\n\n"
             f"*Treinamento:* {treinamento}\n"
-            f"*Usuário:* <@{usuario}>\n"
+            f"*Usuário:* <@{usuario_id}>\n"
             f"*Nota:* {nota} - {texto_nota}"
         )
     )
@@ -186,13 +169,13 @@ def resposta_pesquisa(ack, body, client):
     salvar_no_sheets(
         tipo="Pesquisa",
         nome=treinamento,
-        usuario=usuario,
+        usuario=usuario_nome,
         resposta=f"{nota} - {texto_nota}"
     )
 
     client.chat_postEphemeral(
         channel=canal_origem,
-        user=usuario,
+        user=usuario_id,
         text=f"Resposta registrada ✅\nSua nota foi: {texto_nota}"
     )
 
