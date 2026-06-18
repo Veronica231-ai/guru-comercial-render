@@ -16,11 +16,13 @@ flask_app = Flask(__name__)
 CANAL_COMUNICADOS = "#comunicações-"
 CANAL_RESPOSTAS = "#nps-repostas"
 
-GOOGLE_SHEETS_URL = "https://script.google.com/a/macros/anota.ai/s/AKfycbzJRf-k3zBoNT9e_ImXc_9ufKa4ji7FCzoG4Acch90dTYq9jDFdk9_YkbfrpwVlIi7f/exec"
+GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbysiUIje08OUUmB0XxtMsQ8Z9_jj46ktl82gSmhuIj24XnB5KmTEiJzNrw6qDrnGnFq/exec"
 
 
 def salvar_no_sheets(tipo, nome, usuario, resposta):
     try:
+        print("Tentando salvar no Google Sheets...")
+
         dados = json.dumps({
             "tipo": tipo,
             "nome": nome,
@@ -34,6 +36,13 @@ def salvar_no_sheets(tipo, nome, usuario, resposta):
             headers={"Content-Type": "application/json"},
             method="POST"
         )
+
+        resposta_google = urllib.request.urlopen(req, timeout=5)
+
+        print("Resposta do Google Sheets:", resposta_google.status)
+
+    except Exception as erro:
+        print("Erro ao salvar no Google Sheets:", erro)
 
         urllib.request.urlopen(req, timeout=5)
 
