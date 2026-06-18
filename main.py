@@ -1,5 +1,6 @@
 import os
-import requests
+import json
+import urllib.request
 
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
@@ -19,6 +20,25 @@ GOOGLE_SHEETS_URL = "https://script.google.com/a/macros/anota.ai/s/AKfycbzJRf-k3
 
 
 def salvar_no_sheets(tipo, nome, usuario, resposta):
+    try:
+        dados = json.dumps({
+            "tipo": tipo,
+            "nome": nome,
+            "usuario": usuario,
+            "resposta": resposta
+        }).encode("utf-8")
+
+        req = urllib.request.Request(
+            GOOGLE_SHEETS_URL,
+            data=dados,
+            headers={"Content-Type": "application/json"},
+            method="POST"
+        )
+
+        urllib.request.urlopen(req, timeout=5)
+
+    except Exception as erro:
+        print(f"Erro ao salvar no Google Sheets: {erro}")
     try:
         requests.post(
             GOOGLE_SHEETS_URL,
