@@ -1,4 +1,5 @@
 import os
+import requests
 
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
@@ -13,6 +14,24 @@ flask_app = Flask(__name__)
 
 CANAL_COMUNICADOS = "#comunicações-"
 CANAL_RESPOSTAS = "#nps-repostas"
+
+GOOGLE_SHEETS_URL = "https://script.google.com/a/macros/anota.ai/s/AKfycbzJRf-k3zBoNT9e_ImXc_9ufKa4ji7FCzoG4Acch90dTYq9jDFdk9_YkbfrpwVlIi7f/exec"
+
+
+def salvar_no_sheets(tipo, nome, usuario, resposta):
+    try:
+        requests.post(
+            GOOGLE_SHEETS_URL,
+            json={
+                "tipo": tipo,
+                "nome": nome,
+                "usuario": usuario,
+                "resposta": resposta
+            },
+            timeout=5
+        )
+    except Exception as erro:
+        print(f"Erro ao salvar no Google Sheets: {erro}")
 
 
 @app.command("/comunicado")
@@ -58,7 +77,7 @@ def pesquisa(ack, body, respond):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"*Pesquisa de satisfação* 🔥\n\nQueremos te ouvir e entender o que você achou do treinamento *{treinamento}*.\n\nSua opinião é muito importante para que possamos evoluir cada vez mais nossos conteúdos, treinamentos e iniciativas.\n\nConta pra gente como foi sua experiência!\n\n _Leva menos de 1 minuto... seu café nem vai esfriar_ 😅"
+                "text": f"*Pesquisa de satisfação* 🔥\n\nQueremos te ouvir e entender o que você achou do treinamento *{treinamento}*.\n\nSua opinião é muito importante para que possamos evoluir cada vez mais nossos conteúdos, treinamentos e iniciativas.\n\nConta pra gente como foi sua experiência!\n\n_Leva menos de 1 minuto... seu café nem vai esfriar_ 😅"
             }
         }
     ]
@@ -80,9 +99,7 @@ def pesquisa(ack, body, respond):
         })
 
     blocks.extend([
-        {
-            "type": "divider"
-        },
+        {"type": "divider"},
         {
             "type": "section",
             "block_id": f"pesquisa_{treinamento}",
@@ -93,46 +110,11 @@ def pesquisa(ack, body, respond):
             "accessory": {
                 "type": "radio_buttons",
                 "options": [
-                    {
-                        "text": {
-                            "type": "plain_text",
-                            "text": "⭐ Muito Insatisfeito",
-                            "emoji": True
-                        },
-                        "value": "1"
-                    },
-                    {
-                        "text": {
-                            "type": "plain_text",
-                            "text": "⭐⭐ Insatisfeito",
-                            "emoji": True
-                        },
-                        "value": "2"
-                    },
-                    {
-                        "text": {
-                            "type": "plain_text",
-                            "text": "⭐⭐⭐ Neutro",
-                            "emoji": True
-                        },
-                        "value": "3"
-                    },
-                    {
-                        "text": {
-                            "type": "plain_text",
-                            "text": "⭐⭐⭐⭐ Satisfeito",
-                            "emoji": True
-                        },
-                        "value": "4"
-                    },
-                    {
-                        "text": {
-                            "type": "plain_text",
-                            "text": "⭐⭐⭐⭐⭐ Muito Satisfeito",
-                            "emoji": True
-                        },
-                        "value": "5"
-                    }
+                    {"text": {"type": "plain_text", "text": "⭐ Muito Insatisfeito", "emoji": True}, "value": "1"},
+                    {"text": {"type": "plain_text", "text": "⭐⭐ Insatisfeito", "emoji": True}, "value": "2"},
+                    {"text": {"type": "plain_text", "text": "⭐⭐⭐ Neutro", "emoji": True}, "value": "3"},
+                    {"text": {"type": "plain_text", "text": "⭐⭐⭐⭐ Satisfeito", "emoji": True}, "value": "4"},
+                    {"text": {"type": "plain_text", "text": "⭐⭐⭐⭐⭐ Muito Satisfeito", "emoji": True}, "value": "5"}
                 ],
                 "action_id": "resposta_pesquisa"
             }
@@ -170,6 +152,13 @@ def resposta_pesquisa(ack, body, client):
             f"*Usuário:* <@{usuario}>\n"
             f"*Nota:* {nota} - {texto_nota}"
         )
+    )
+
+    salvar_no_sheets(
+        tipo="Pesquisa",
+        nome=treinamento,
+        usuario=usuario,
+        resposta=f"{nota} - {texto_nota}"
     )
 
     client.chat_postEphemeral(
