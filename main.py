@@ -202,7 +202,109 @@ def resposta_pesquisa(ack, body, client):
         text="⚠️ Não foi possível registrar sua resposta agora. Tente novamente em alguns instantes."
     )
 
-
+              {@app.command("/guru-news")
+                    "type": "input",
+                    "block_id": "materiais_block",
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📚 Materiais"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "materiais_input",
+                        "multiline": True,
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Ex: Playbook HubSpot\nGuia Comercial\nManual Comer Fora"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "link_materiais_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📎 Link dos materiais"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "link_materiais_input",
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Cole o link da pasta ou material"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "dados_block",
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📊 Dados da quinzena"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "dados_input",
+                        "multiline": True
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "link_report_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📈 Link do report completo"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "link_report_input"
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "reconhecimentos_block",
+                    "label": {
+                        "type": "plain_text",
+                        "text": "🏆 Reconhecimentos"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "reconhecimentos_input",
+                        "multiline": True
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "eventos_block",
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📅 Próximos eventos"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "eventos_input",
+                        "multiline": True
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "dica_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "💡 Dica da semana"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "dica_input",
+                        "multiline": True
+                    }
+                }
+            ]
+        }
+       )
 handler = SlackRequestHandler(app)
 
 
