@@ -200,137 +200,6 @@ def resposta_pesquisa(ack, body, client):
     )
 
 
-text",
-                        "text": "📅 Período"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "periodo_input",
-                        "placeholder": {
-                            "type": "plain_text",
-                            "text": "Ex: 01 a 15 de Julho"
-                        }
-                    }
-                },
-                {
-                    "type": "input",
-                    "block_id": "destaques_block",
-                    "label": {
-                        "type": "plain_text",
-                        "text": "📢 Destaques da quinzena"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "destaques_input",
-                        "multiline": True
-                    }
-                },
-                {
-                    "type": "input",
-                    "block_id": "materiais_block",
-                    "label": {
-                        "type": "plain_text",
-                        "text": "📚 Materiais"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "materiais_input",
-                        "multiline": True,
-                        "placeholder": {
-                            "type": "plain_text",
-                            "text": "Ex: Playbook HubSpot\nGuia Comercial\nManual Comer Fora"
-                        }
-                    }
-                },
-                {
-                    "type": "input",
-                    "block_id": "link_materiais_block",
-                    "optional": True,
-                    "label": {
-                        "type": "plain_text",
-                        "text": "📎 Link dos materiais"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "link_materiais_input",
-                        "placeholder": {
-                            "type": "plain_text",
-                            "text": "Cole o link da pasta ou material"
-                        }
-                    }
-                },
-                {
-                    "type": "input",
-                    "block_id": "dados_block",
-                    "label": {
-                        "type": "plain_text",
-                        "text": "📊 Dados da quinzena"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "dados_input",
-                        "multiline": True
-                    }
-                },
-                {
-                    "type": "input",
-                    "block_id": "link_report_block",
-                    "optional": True,
-                    "label": {
-                        "type": "plain_text",
-                        "text": "📈 Link do report completo"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "link_report_input"
-                    }
-                },
-                {
-                    "type": "input",
-                    "block_id": "reconhecimentos_block",
-                    "label": {
-                        "type": "plain_text",
-                        "text": "🏆 Reconhecimentos"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "reconhecimentos_input",
-                        "multiline": True
-                    }
-                },
-                {
-                    "type": "input",
-                    "block_id": "eventos_block",
-                    "label": {
-                        "type": "plain_text",
-                        "text": "📅 Próximos eventos"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "eventos_input",
-                        "multiline": True
-                    }
-                },
-                {
-                    "type": "input",
-                    "block_id": "dica_block",
-                    "optional": True,
-                    "label": {
-                        "type": "plain_text",
-                        "text": "💡 Dica da semana"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "dica_input",
-                        "multiline": True
-                    }
-                }
-            ]
-        }
-    )
-
-
-handler = SlackRequestHandler(app)
 @app.command("/guru-news")
 def guru_news(ack, body, client):
     ack()
@@ -528,60 +397,16 @@ def guru_news(ack, body, client):
             ]
         }
     )
-    ack()
 
-    client.views_open(
-        trigger_id=body["trigger_id"],
-        view={
-            "type": "modal",
-            "callback_id": "guru_news_modal",
-            "title": {
-                "type": "plain_text",
-                "text": "Guru News"
-            },
-            "submit": {
-                "type": "plain_text",
-                "text": "Pré-visualizar"
-            },
-            "close": {
-                "type": "plain_text",
-                "text": "Cancelar"
-            },
-            "blocks": [
-                {
-                    "type": "input",
-                    "block_id": "banner_block",
-                    "label": {
-                        "type": "plain_text",
-                        "text": "🖼️ Link do banner"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "banner_input",
-                        "placeholder": {
-                            "type": "plain_text",
-                            "text": "Cole o link da imagem ou GIF"
-                        }
-                    }
-                },
-                {
-                    "type": "input",
-                    "block_id": "titulo_block",
-                    "label": {
-                        "type": "plain_text",
-                        "text": "📰 Título da edição"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "titulo_input",
-                        "placeholder": {
-                            "type": "plain_text",
-                            "text": "Ex: Guru News | Edição #01"
-                        }
-                    }
-                },
-                {
-                    "type": "input",
-                    "block_id": "periodo_block",
-                    "label": {
-                        "type": "plain_
+
+handler = SlackRequestHandler(app)
+
+
+@flask_app.route("/slack/events", methods=["POST"])
+def slack_events():
+    return handler.handle(request)
+
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    flask_app.run(host="0.0.0.0", port=port)
