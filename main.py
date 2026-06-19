@@ -200,65 +200,7 @@ def resposta_pesquisa(ack, body, client):
     )
 
 
-@app.command("/guru-news")
-def guru_news(ack, body, client):
-    ack()
-
-    client.views_open(
-        trigger_id=body["trigger_id"],
-        view={
-            "type": "modal",
-            "callback_id": "guru_news_modal",
-            "title": {
-                "type": "plain_text",
-                "text": "Guru News"
-            },
-            "submit": {
-                "type": "plain_text",
-                "text": "Pré-visualizar"
-            },
-            "close": {
-                "type": "plain_text",
-                "text": "Cancelar"
-            },
-            "blocks": [
-                {
-                    "type": "input",
-                    "block_id": "banner_block",
-                    "label": {
-                        "type": "plain_text",
-                        "text": "🖼️ Link do banner"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "banner_input",
-                        "placeholder": {
-                            "type": "plain_text",
-                            "text": "Cole o link da imagem ou GIF"
-                        }
-                    }
-                },
-                {
-                    "type": "input",
-                    "block_id": "titulo_block",
-                    "label": {
-                        "type": "plain_text",
-                        "text": "📰 Título da edição"
-                    },
-                    "element": {
-                        "type": "plain_text_input",
-                        "action_id": "titulo_input",
-                        "placeholder": {
-                            "type": "plain_text",
-                            "text": "Ex: Guru News | Edição #01"
-                        }
-                    }
-                },
-                {
-                    "type": "input",
-                    "block_id": "periodo_block",
-                    "label": {
-                        "type": "plain_text",
+text",
                         "text": "📅 Período"
                     },
                     "element": {
@@ -389,13 +331,257 @@ def guru_news(ack, body, client):
 
 
 handler = SlackRequestHandler(app)
+@app.command("/guru-news")
+def guru_news(ack, body, client):
+    ack()
 
+    client.views_open(
+        trigger_id=body["trigger_id"],
+        view={
+            "type": "modal",
+            "callback_id": "guru_news_modal",
+            "title": {
+                "type": "plain_text",
+                "text": "Guru News"
+            },
+            "submit": {
+                "type": "plain_text",
+                "text": "Pré-visualizar"
+            },
+            "close": {
+                "type": "plain_text",
+                "text": "Cancelar"
+            },
+            "blocks": [
+                {
+                    "type": "input",
+                    "block_id": "banner_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "🖼️ Link do banner ou GIF"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "banner_input",
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Cole o link da imagem ou GIF"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "titulo_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📰 Título da edição"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "titulo_input",
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Ex: Guru News | Edição #01"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "periodo_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📅 Período"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "periodo_input",
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Ex: 01 a 15 de Julho"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "destaques_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📢 Destaques da quinzena"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "destaques_input",
+                        "multiline": True
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "materiais_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📚 Materiais"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "materiais_input",
+                        "multiline": True,
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Um por linha: Nome do material | link"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "imagem_dados_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📊 Link da imagem dos dados"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "imagem_dados_input",
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Cole o link da imagem dos dados"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "link_report_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📈 Link do report completo"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "link_report_input"
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "reconhecimentos_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "🏆 Reconhecimentos"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "reconhecimentos_input",
+                        "multiline": True
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "gif_reconhecimento_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "🎞️ Link do GIF de reconhecimento"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "gif_reconhecimento_input",
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Cole o link do GIF"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "eventos_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📅 Próximos eventos"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "eventos_input",
+                        "multiline": True
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "dica_block",
+                    "optional": True,
+                    "label": {
+                        "type": "plain_text",
+                        "text": "💡 Dica da semana"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "dica_input",
+                        "multiline": True
+                    }
+                }
+            ]
+        }
+    )
+    ack()
 
-@flask_app.route("/slack/events", methods=["POST"])
-def slack_events():
-    return handler.handle(request)
-
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    flask_app.run(host="0.0.0.0", port=port)
+    client.views_open(
+        trigger_id=body["trigger_id"],
+        view={
+            "type": "modal",
+            "callback_id": "guru_news_modal",
+            "title": {
+                "type": "plain_text",
+                "text": "Guru News"
+            },
+            "submit": {
+                "type": "plain_text",
+                "text": "Pré-visualizar"
+            },
+            "close": {
+                "type": "plain_text",
+                "text": "Cancelar"
+            },
+            "blocks": [
+                {
+                    "type": "input",
+                    "block_id": "banner_block",
+                    "label": {
+                        "type": "plain_text",
+                        "text": "🖼️ Link do banner"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "banner_input",
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Cole o link da imagem ou GIF"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "titulo_block",
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📰 Título da edição"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "titulo_input",
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Ex: Guru News | Edição #01"
+                        }
+                    }
+                },
+                {
+                    "type": "input",
+                    "block_id": "periodo_block",
+                    "label": {
+                        "type": "plain_
