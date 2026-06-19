@@ -398,7 +398,17 @@ def guru_news(ack, body, client):
         }
     )
 
+@app.view("guru_news_modal")
+def guru_news_preview(ack, body, client, view):
+    ack()
 
+    usuario_id = body["user"]["id"]
+
+    client.chat_postEphemeral(
+        channel=body["user"]["id"],
+        user=usuario_id,
+        text="✅ Pré-visualização recebida! Próximo passo: montar o layout do Guru News."
+    )
 handler = SlackRequestHandler(app)
 
 
