@@ -403,11 +403,220 @@ def guru_news_preview(ack, body, client, view):
     ack()
 
     usuario_id = body["user"]["id"]
+    valores = view["state"]["values"]
 
-    client.chat_postEphemeral(
-        channel=body["user"]["id"],
-        user=usuario_id,
-        text="✅ Pré-visualização recebida! Próximo passo: montar o layout do Guru News."
+    def pegar_valor(block_id, action_id):
+        return valores.get(block_id, {}).get(action_id, {}).get("value", "").strip()
+
+    banner = pegar_valor("banner_block", "banner_input")
+    titulo = pegar_valor("titulo_block", "titulo_input")
+    periodo = pegar_valor("periodo_block", "periodo_input")
+    destaques = pegar_valor("destaques_block", "destaques_input")
+    materiais = pegar_valor("materiais_block", "materiais_input")
+    imagem_dados = pegar_valor("imagem_dados_block", "imagem_dados_input")
+    link_report = pegar_valor("link_report_block", "link_report_input")
+    reconhecimentos = pegar_valor("reconhecimentos_block", "reconhecimentos_input")
+    gif_reconhecimento = pegar_valor("gif_reconhecimento_block", "gif_reconhecimento_input")
+    eventos = pegar_valor("eventos_block", "eventos_input")
+    dica = pegar_valor("dica_block", "dica_input")
+
+    blocks = []
+
+    if banner:
+        blocks.append({
+            "type": "image",
+            "image_url": banner,
+            "alt_text": "Banner Guru News"
+        })
+
+    if titulo or periodo:
+        texto_titulo = ""
+        if titulo:
+            texto_titulo += f"*{titulo}*"
+        if periodo:
+            texto_titulo += f"\n📅 {periodo}"
+
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": texto_titulo
+            }
+        })
+        blocks.append({"type": "divider"})
+
+    if destaques:
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"📢 *Destaques da quinzena*\n\n{destaques}"
+            }
+        })
+        blocks.append({"type": "divider"})
+
+    if materiais:
+        linhas = [linha.strip() for linha in materiais.split("\n") if linha.strip()]
+
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "📚 *Materiais*"
+            }
+        })
+
+        for i, linha in enumerate(linhas[:5], start=1):
+            if "|" in linha:
+                nome, link = linha.split("|", 1)
+                nome = nome.strip()
+                link = link.strip()
+
+                blocks.append({
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"• {nome}"
+                    },
+                    "accessory": {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "📎 Consultar",
+                            "emoji": True
+                        },
+                        "url": link
+                    }
+                })
+            else:
+                blocks.append({
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"• {linha}"
+                    }
+                })
+
+        blocks.append({"type": "divider"})
+
+    if imagem_dados:
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "📊 *Dados da quinzena*"
+            }
+        })
+        blocks.append({
+            "type": "image",
+            "image_url": imagem_dados,
+            "alt_text": "Dados da quinzena"
+        })
+
+        if link_report:
+            blocks.append({
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "📈 Ver report completo",
+                            "emoji": True
+                        },
+                        "url": link_report
+                    }
+                ]
+            })
+
+        blocks.append({"type": "divider"})
+
+    if reconhecimentos:
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"🏆 *Reconhecimentos*\n\n{reconhecimentos}"
+            }
+        })
+
+        if gif_reconhecimento:
+            blocks.append({
+                "type": "image",
+                "image_url": gif_reconhecimento,
+                "alt_text": "Reconhecimento"
+            })
+
+        blocks.append({"type": "divider"})
+
+    if eventos:
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"📅 *Próximos eventos*\n\n{eventos}"
+            }
+        })
+        blocks.append({"type": "divider"})
+
+    if dica:
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"💡 *Dica da semana*\n\n{dica}"
+            }
+        })
+        blocks.append({"type": "divider"})
+
+    blocks.append({
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "*O que achou desta edição?*"
+        }
+    })
+
+    blocks.append({
+        "type": "actions",
+        "elements": [
+            {
+                "type": "button",
+                "text": {
+                    "type": "plain_text",
+                    "text": "👍 Curti",
+                    "emoji": True
+                },
+                "value": titulo or "Guru News",
+                "action_id": "guru_news_curti"
+            },
+            {
+                "type": "button",
+                "text": {
+                    "type": "plain_text",
+                    "text": "👎 Pode melhorar",
+                    "emoji": True
+                },
+                "value": titulo or "Guru News",
+                "action_id": "guru_news_nao_curti"
+            },
+            {
+                "type": "button",
+                "text": {
+                    "type": "plain_text",
+                    "text": "💬 Enviar sugestão",
+                    "emoji": True
+                },
+                "value": titulo or "Guru News",
+                "action_id": "guru_news_sugestao"
+            }
+        ]
+    })
+
+    client.chat_postMessage(
+        channel=usuario_id,
+        text="Pré-visualização do Guru News",
+        blocks=blocks
     )
 handler = SlackRequestHandler(app)
 
