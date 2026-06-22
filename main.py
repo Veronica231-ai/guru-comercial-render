@@ -209,126 +209,205 @@ def guru_news(ack, body, client):
         view={
             "type": "modal",
             "callback_id": "guru_news_modal",
-            "title": {"type": "plain_text", "text": "Guru News"},
-            "submit": {"type": "plain_text", "text": "Pré-visualizar"},
-            "close": {"type": "plain_text", "text": "Cancelar"},
+            "title": {
+                "type": "plain_text",
+                "text": "Guru News"
+            },
+            "submit": {
+                "type": "plain_text",
+                "text": "Pré-visualizar"
+            },
+            "close": {
+                "type": "plain_text",
+                "text": "Cancelar"
+            },
             "blocks": [
                 {
                     "type": "input",
                     "block_id": "banner_block",
                     "optional": True,
-                    "label": {"type": "plain_text", "text": "🖼️ Link do banner ou GIF"},
+                    "label": {
+                        "type": "plain_text",
+                        "text": "🖼️ Link do banner ou GIF"
+                    },
                     "element": {
                         "type": "plain_text_input",
                         "action_id": "banner_input",
-                        "placeholder": {"type": "plain_text", "text": "Cole o link da imagem ou GIF"}
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Cole o link da imagem ou GIF"
+                        }
                     }
                 },
                 {
                     "type": "input",
                     "block_id": "titulo_block",
                     "optional": True,
-                    "label": {"type": "plain_text", "text": "📰 Título da edição"},
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📰 Título da edição"
+                    },
                     "element": {
                         "type": "plain_text_input",
                         "action_id": "titulo_input",
-                        "placeholder": {"type": "plain_text", "text": "Ex: Guru News | Edição #01"}
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Ex: Guru News | Edição #01"
+                        }
                     }
                 },
                 {
                     "type": "input",
                     "block_id": "periodo_block",
                     "optional": True,
-                    "label": {"type": "plain_text", "text": "📅 Período"},
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📅 Período"
+                    },
                     "element": {
                         "type": "plain_text_input",
                         "action_id": "periodo_input",
-                        "placeholder": {"type": "plain_text", "text": "Ex: 01 a 15 de Julho"}
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Ex: 01 a 15 de Julho"
+                        }
                     }
                 },
                 {
                     "type": "input",
                     "block_id": "destaques_block",
                     "optional": True,
-                    "label": {"type": "plain_text", "text": "📢 Destaques da quinzena"},
-                    "element": {"type": "plain_text_input", "action_id": "destaques_input", "multiline": True}
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📢 Destaques da quinzena"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "destaques_input",
+                        "multiline": True
+                    }
                 },
                 {
                     "type": "input",
                     "block_id": "materiais_block",
                     "optional": True,
-                    "label": {"type": "plain_text", "text": "📚 Materiais"},
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📚 Materiais"
+                    },
                     "element": {
                         "type": "plain_text_input",
                         "action_id": "materiais_input",
                         "multiline": True,
-                        "placeholder": {"type": "plain_text", "text": "Um por linha: Nome do material | link"}
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Um por linha: Nome do material | link"
+                        }
                     }
                 },
                 {
                     "type": "input",
                     "block_id": "imagem_dados_block",
                     "optional": True,
-                    "label": {"type": "plain_text", "text": "📊 Link da imagem dos dados"},
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📊 Link da imagem dos dados"
+                    },
                     "element": {
                         "type": "plain_text_input",
                         "action_id": "imagem_dados_input",
-                        "placeholder": {"type": "plain_text", "text": "Cole o link da imagem dos dados"}
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Cole o link da imagem dos dados"
+                        }
                     }
                 },
                 {
                     "type": "input",
                     "block_id": "link_report_block",
                     "optional": True,
-                    "label": {"type": "plain_text", "text": "📈 Link do report completo"},
-                    "element": {"type": "plain_text_input", "action_id": "link_report_input"}
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📈 Link do report completo"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "link_report_input"
+                    }
                 },
                 {
                     "type": "input",
                     "block_id": "reconhecimentos_block",
                     "optional": True,
-                    "label": {"type": "plain_text", "text": "🏆 Reconhecimentos"},
-                    "element": {"type": "plain_text_input", "action_id": "reconhecimentos_input", "multiline": True}
+                    "label": {
+                        "type": "plain_text",
+                        "text": "🏆 Reconhecimentos"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "reconhecimentos_input",
+                        "multiline": True
+                    }
                 },
                 {
                     "type": "input",
                     "block_id": "gif_reconhecimento_block",
                     "optional": True,
-                    "label": {"type": "plain_text", "text": "🎞️ Link do GIF de reconhecimento"},
+                    "label": {
+                        "type": "plain_text",
+                        "text": "🎞️ Link do GIF de reconhecimento"
+                    },
                     "element": {
                         "type": "plain_text_input",
                         "action_id": "gif_reconhecimento_input",
-                        "placeholder": {"type": "plain_text", "text": "Cole o link do GIF"}
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Cole o link do GIF"
+                        }
                     }
                 },
                 {
                     "type": "input",
                     "block_id": "eventos_block",
                     "optional": True,
-                    "label": {"type": "plain_text", "text": "📅 Próximos eventos"},
-                    "element": {"type": "plain_text_input", "action_id": "eventos_input", "multiline": True}
+                    "label": {
+                        "type": "plain_text",
+                        "text": "📅 Próximos eventos"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "eventos_input",
+                        "multiline": True
+                    }
                 },
                 {
                     "type": "input",
                     "block_id": "dica_block",
                     "optional": True,
-                    "label": {"type": "plain_text", "text": "💡 Dica da semana"},
-                    "element": {"type": "plain_text_input", "action_id": "dica_input", "multiline": True}
+                    "label": {
+                        "type": "plain_text",
+                        "text": "💡 Dica da semana"
+                    },
+                    "element": {
+                        "type": "plain_text_input",
+                        "action_id": "dica_input",
+                        "multiline": True
+                    }
                 }
             ]
         }
     )
 
 
-@app.view("guru_news_modal")
 def guru_news_preview(ack, body, client, view):
     ack()
 
     usuario_id = body["user"]["id"]
     valores = view["state"]["values"]
 
-    def pegar_valor(block_id, action_id):
-        return valores.get(block_id, {}).get(action_id, {}).get("value", "").strip()
+def pegar_valor(block_id, action_id):
+    valor = valores.get(block_id, {}).get(action_id, {}).get("value")
+    return valor.strip() if valor else ""
 
     banner = pegar_valor("banner_block", "banner_input")
     titulo = pegar_valor("titulo_block", "titulo_input")
@@ -344,8 +423,12 @@ def guru_news_preview(ack, body, client, view):
 
     blocks = []
 
-    if banner:
-        blocks.append({"type": "image", "image_url": banner, "alt_text": "Banner Guru News"})
+    if ba@app.view("guru_news_modal")nner:
+        blocks.append({
+            "type": "image",
+            "image_url": banner,
+            "alt_text": "Banner Guru News"
+        })
 
     if titulo or periodo:
         texto_titulo = ""
@@ -353,82 +436,178 @@ def guru_news_preview(ack, body, client, view):
             texto_titulo += f"*{titulo}*"
         if periodo:
             texto_titulo += f"\n📅 {periodo}"
-        blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": texto_titulo}})
+
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": texto_titulo
+            }
+        })
         blocks.append({"type": "divider"})
 
     if destaques:
-        blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": f"📢 *Destaques da quinzena*\n\n{destaques}"}})
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"📢 *Destaques da quinzena*\n\n{destaques}"
+            }
+        })
         blocks.append({"type": "divider"})
 
     if materiais:
         linhas = [linha.strip() for linha in materiais.split("\n") if linha.strip()]
-        blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": "📚 *Materiais*"}})
 
-        for linha in linhas[:5]:
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "📚 *Materiais*"
+            }
+        })
+
+        for i, linha in enumerate(linhas[:5], start=1):
             if "|" in linha:
                 nome, link = linha.split("|", 1)
+                nome = nome.strip()
+                link = link.strip()
+
                 blocks.append({
                     "type": "section",
-                    "text": {"type": "mrkdwn", "text": f"• {nome.strip()}"},
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"• {nome}"
+                    },
                     "accessory": {
                         "type": "button",
-                        "text": {"type": "plain_text", "text": "📎 Consultar", "emoji": True},
-                        "url": link.strip()
+                        "text": {
+                            "type": "plain_text",
+                            "text": "📎 Consultar",
+                            "emoji": True
+                        },
+                        "url": link
                     }
                 })
             else:
-                blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": f"• {linha}"}})
+                blocks.append({
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"• {linha}"
+                    }
+                })
+
         blocks.append({"type": "divider"})
 
     if imagem_dados:
-        blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": "📊 *Dados da quinzena*"}})
-        blocks.append({"type": "image", "image_url": imagem_dados, "alt_text": "Dados da quinzena"})
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "📊 *Dados da quinzena*"
+            }
+        })
+        blocks.append({
+            "type": "image",
+            "image_url": imagem_dados,
+            "alt_text": "Dados da quinzena"
+        })
 
         if link_report:
             blocks.append({
                 "type": "actions",
-                "elements": [{
-                    "type": "button",
-                    "text": {"type": "plain_text", "text": "📈 Ver report completo", "emoji": True},
-                    "url": link_report
-                }]
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "text": "📈 Ver report completo",
+                            "emoji": True
+                        },
+                        "url": link_report
+                    }
+                ]
             })
+
         blocks.append({"type": "divider"})
 
     if reconhecimentos:
-        blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": f"🏆 *Reconhecimentos*\n\n{reconhecimentos}"}})
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"🏆 *Reconhecimentos*\n\n{reconhecimentos}"
+            }
+        })
+
         if gif_reconhecimento:
-            blocks.append({"type": "image", "image_url": gif_reconhecimento, "alt_text": "Reconhecimento"})
+            blocks.append({
+                "type": "image",
+                "image_url": gif_reconhecimento,
+                "alt_text": "Reconhecimento"
+            })
+
         blocks.append({"type": "divider"})
 
     if eventos:
-        blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": f"📅 *Próximos eventos*\n\n{eventos}"}})
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"📅 *Próximos eventos*\n\n{eventos}"
+            }
+        })
         blocks.append({"type": "divider"})
 
     if dica:
-        blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": f"💡 *Dica da semana*\n\n{dica}"}})
+        blocks.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"💡 *Dica da semana*\n\n{dica}"
+            }
+        })
         blocks.append({"type": "divider"})
 
-    blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": "*O que achou desta edição?*"}})
+    blocks.append({
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "*O que achou desta edição?*"
+        }
+    })
 
     blocks.append({
         "type": "actions",
         "elements": [
             {
                 "type": "button",
-                "text": {"type": "plain_text", "text": "👍 Curti", "emoji": True},
+                "text": {
+                    "type": "plain_text",
+                    "text": "👍 Curti",
+                    "emoji": True
+                },
                 "value": titulo or "Guru News",
                 "action_id": "guru_news_curti"
             },
             {
                 "type": "button",
-                "text": {"type": "plain_text", "text": "👎 Pode melhorar", "emoji": True},
+                "text": {
+                    "type": "plain_text",
+                    "text": "👎 Pode melhorar",
+                    "emoji": True
+                },
                 "value": titulo or "Guru News",
                 "action_id": "guru_news_nao_curti"
             },
             {
                 "type": "button",
-                "text": {"type": "plain_text", "text": "💬 Enviar sugestão", "emoji": True},
+                "text": {
+                    "type": "plain_text",
+                    "text": "💬 Enviar sugestão",
+                    "emoji": True
+                },
                 "value": titulo or "Guru News",
                 "action_id": "guru_news_sugestao"
             }
@@ -440,10 +619,6 @@ def guru_news_preview(ack, body, client, view):
         text="Pré-visualização do Guru News",
         blocks=blocks
     )
-
-
-handler = SlackRequestHandler(app)
-
 
 @flask_app.route("/slack/events", methods=["POST"])
 def slack_events():
