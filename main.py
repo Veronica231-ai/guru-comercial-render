@@ -423,7 +423,7 @@ def pegar_valor(block_id, action_id):
 
     blocks = []
 
-    if ba@app.view("guru_news_modal")nner:
+    if banner:
         blocks.append({
             "type": "image",
             "image_url": banner,
